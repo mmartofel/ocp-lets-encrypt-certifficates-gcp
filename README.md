@@ -1,4 +1,4 @@
-## 🌟  Configure Red Hat OpenShift cluster installed at AWS with Let's Encrypt generated certifficates
+## 🌟  Configure Red Hat OpenShift cluster installed at GCP with Let's Encrypt generated certifficates
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-mmartofel-blue)](https://github.com/mmartofel/ocp-lets-encrypt-certifficates)
 [![OpenShift Ready](https://img.shields.io/badge/OpenShift-Ready-brightgreen)](https://www.openshift.com)
