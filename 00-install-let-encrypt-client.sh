@@ -41,6 +41,7 @@ fi
 # Export so that acme.sh can use them
 export GCP_SERVICE_ACCOUNT_FILE="${GCP_SERVICE_ACCOUNT_FILE:-$DEFAULT_GCP_SA_FILE}"
 export GCP_PROJECT_ID="$GCP_PROJECT_ID"
+export GOOGLE_APPLICATION_CREDENTIALS="$GCP_SERVICE_ACCOUNT_FILE:-${DEFAULT_GCP_SA_FILE}"
 
 echo
 echo "You have provided the following GCP credentials:"

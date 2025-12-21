@@ -4,19 +4,22 @@ set -euo pipefail
 ##############################################
 # CONFIGURATION
 ##############################################
-CERTDIR="certificates"
-ACME_HOME="acme.sh"
+export CERTDIR="certificates"
+export ACME_HOME="${HOME}/.acme.sh"
+export ACME_SH=./acme.sh/acme.sh
 
 # GCP DNS configuration
 export GCP_PROJECT="${GCP_PROJECT_ID:-my-gcp-project-id}"
 export GCP_SERVICE_ACCOUNT_FILE="${GCP_SERVICE_ACCOUNT_FILE:-./gcp_service_account.json}"
+export GOOGLE_APPLICATION_CREDENTIALS="${GCP_SERVICE_ACCOUNT_FILE:-./gcp_service_account.json}"
 
 ##############################################
 # CLEANUP
 ##############################################
 echo "🧹 Cleaning up previous certificates and acme.sh data..."
 rm -rf "${CERTDIR}"
-rm -rf "${HOME}/.acme.sh"
+rm -rf "${ACME_HOME}"
+mkdir -p "${ACME_HOME}" "${CERTDIR}"
 
 ##############################################
 # CHECK OPENSHIFT LOGIN
@@ -70,25 +73,25 @@ read -rp "📧 Enter email address for Let's Encrypt notifications: " EMAIL
 echo
 
 ##############################################
-# INSTALL ACME.SH (LOCAL)
+# INSTALL ACME.SH
 ##############################################
-if [[ ! -x "./acme.sh/acme.sh" ]]; then
-  echo "📦 Installing acme.sh locally..."
-  curl -s https://get.acme.sh | sh -s email="$EMAIL"
+if [[ ! -x "$ACME_SH" ]]; then
+  echo "📦 Installing acme.sh..."
+  curl -s https://get.acme.sh | sh -s email="$EMAIL" --home "$ACME_HOME"
 fi
 
 ##############################################
-# REGISTER ACCOUNT (ZeroSSL)
+# REGISTER ACCOUNT (Let's Encrypt)
 ##############################################
-echo "🔐 Registering ACME account with ZeroSSL..."
-"${ACME_HOME}/acme.sh" --register-account -m "$EMAIL" --server zerossl
-"${ACME_HOME}/acme.sh" --set-default-ca --server zerossl
+echo "🔐 Registering ACME account with Let's Encrypt..."
+"${ACME_SH}" --set-default-ca --server letsencrypt
+"${ACME_SH}" --register-account -m "$EMAIL" --server letsencrypt
 
 ##############################################
-# ISSUE CERTIFICATES (DNS-01 via GCP)
+# ISSUE CERTIFICATES (GCP)
 ##############################################
 echo "🚀 Issuing certificates using Google Cloud DNS..."
-"${ACME_HOME}/acme.sh" --log --issue \
+"${ACME_SH}" --log --issue \
   -d "${LE_API}" \
   -d "*.${LE_WILDCARD}" \
   --dns dns_gcloud
@@ -98,7 +101,7 @@ echo "🚀 Issuing certificates using Google Cloud DNS..."
 ##############################################
 mkdir -p "${CERTDIR}"
 
-"${ACME_HOME}/acme.sh" --install-cert \
+"${ACME_SH}" --install-cert \
   -d "${LE_API}" \
   -d "*.${LE_WILDCARD}" \
   --cert-file "${CERTDIR}/cert.pem" \
