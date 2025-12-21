@@ -6,7 +6,9 @@ set -euo pipefail
 ##############################################
 export CERTDIR="certificates"
 export ACME_HOME="${HOME}/.acme.sh"
-export ACME_SH=./acme.sh/acme.sh
+export ACME_SH="${ACME_HOME}/acme.sh"
+# If you need to use a local acme.sh clone, uncomment the line below and set the path and commect the line above.
+# export ACME_SH=./acme.sh/acme.sh
 
 # GCP DNS configuration
 export GCP_PROJECT="${GCP_PROJECT_ID:-my-gcp-project-id}"
