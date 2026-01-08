@@ -35,8 +35,6 @@ First login to your cluster with admin credentials copying oc command from OpenS
 
 ``` ./01-request-certifficates.sh ```
 
-> **⚠️ NOTICE:** Please monitor this script as Lets Encrypt can lag to create certifficates, if not successfull, please repeate.
-
 #### 3. Patch default IngressController of your OpenShift cluster: ####
 
 ``` ./02-patch-default-ingresscontroller.sh ```
