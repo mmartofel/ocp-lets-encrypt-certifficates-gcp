@@ -3,3 +3,4 @@
 certificates
 acme.sh/
 gcp_service_account.json
+kubeconfig
